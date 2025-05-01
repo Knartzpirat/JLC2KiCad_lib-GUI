@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 from typing import Optional
+from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtCore import QFile, QIODevice, QCoreApplication, QSettings
 from PySide6.QtWidgets import (
     QApplication, QDialog,
@@ -51,7 +52,10 @@ class Widget(QDialog):
     def __init__(self, ui_filename: str, parent: Optional[QWidget] = None):
         super(Widget, self).__init__(parent)
         self.setWindowTitle("JLC2KiCad GUI")
+        my_pixmap = QPixmap("UI/icon.png")
+        my_icon = QIcon(my_pixmap)
 
+        self.setWindowIcon(my_icon)
         # QSettings für persistenten Speicher
         self.settings = QSettings()
 
