@@ -1,20 +1,29 @@
-import subprocess
-import os
+import subprocess, os, sys
 
-basedir = os.path.dirname(__file__)
-ui_file = os.path.join("UI", "JLC2KiCad-GUI.ui")
-icon_file = os.path.join("UI", "icon.ico")
+basedir = os.path.dirname(os.path.abspath(__file__))
+ui_file     = os.path.join(basedir, "UI", "JLC2KiCad-GUI.ui")
+icon_file   = os.path.join(basedir, "UI", "icon.ico")
+pixmap_file = os.path.join(basedir, "UI", "icon.png")
+pkg_folder  = os.path.join(basedir, "JLC2KiCadLib")
 
 cmd = [
     "pyinstaller",
-    "gui_main.py",                 # <-- Hauptskript
-    "--noconsole",
+    "gui_main.py",
     "--onefile",
+    "--noconsole",
     "--name", "JLC2KiCadGUI",
     "--icon", icon_file,
-    "--distpath", "dist",         # <-- Zielordner
-    "--workpath", "build/temp",   # <-- Temporärer Build-Ordner
-    "--add-data", f"{ui_file};UI" # <-- Ressourcen einbinden
+    "--distpath", os.path.join(basedir, "dist"),
+    "--workpath", os.path.join(basedir, "build", "temp"),
+    "--add-data", f"{ui_file};UI",
+    "--add-data", f"{pixmap_file};UI",
+    "--add-data", f"{pkg_folder};JLC2KiCadLib",
+    "--collect-all", "JLC2KiCadLib"
 ]
 
-subprocess.run(cmd)
+# Starte den Build
+result = subprocess.run(cmd, shell=(sys.platform == "win32"))
+if result.returncode != 0:
+    print("Fehler beim Erstellen der EXE:", result.stderr)
+else:
+    print("Build erfolgreich! EXE liegt in:", os.path.join(basedir, "dist"))

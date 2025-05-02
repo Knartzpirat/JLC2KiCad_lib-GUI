@@ -1,3 +1,4 @@
+import os
 import requests
 import json
 import logging
@@ -181,5 +182,5 @@ def main():
         add_component(component, args)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and "PYTHON_EXECUTABLE_MARKER" not in os.environ:
     main()

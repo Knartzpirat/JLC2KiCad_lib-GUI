@@ -1,6 +1,5 @@
 import sys
 import os
-import subprocess
 from typing import Optional
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtCore import QFile, QIODevice, QCoreApplication, QSettings
@@ -10,6 +9,9 @@ from PySide6.QtWidgets import (
     QFileDialog, QMessageBox, QWidget
 )
 from PySide6.QtUiTools import QUiLoader
+
+# Importiere main direkt
+from JLC2KiCadLib.JLC2KiCadLib import main as jlc_main
 
 # Stelle Organisation und App-Name für QSettings ein
 QCoreApplication.setOrganizationName("Knartz Software Bude")
@@ -32,27 +34,30 @@ class CommandBuilder:
         self.logging_level = logging_level
         self.skip_existing = skip_existing
 
-    def build(self) -> str:
-        # Basisbefehl und Part-Nummer
+    def build(self) -> list[str]:
+       
         cmd = ["JLC2KiCadLib", self.part_number]
-        # Ausgabeordner
         cmd += ["-dir", self.output_dir]
-        # Symbolbibliothek
-        cmd += ["-symbol_lib", self.symbol_lib]
-        # Log-Optionen
+        if self.use_log_file:
+            cmd += ["-symbol_lib", self.symbol_lib]
         if self.use_log_file:
             cmd.append("--log_file")
-        cmd += ["-logging_level", self.logging_level]
-        # Skip-existing-Flag
+            cmd += ["-logging_level", self.logging_level]
         if self.skip_existing:
             cmd.append("--skip_existing")
-        return " ".join(cmd)
+        return cmd
 
 class Widget(QDialog):
     def __init__(self, ui_filename: str, parent: Optional[QWidget] = None):
         super(Widget, self).__init__(parent)
         self.setWindowTitle("JLC2KiCad GUI")
-        my_pixmap = QPixmap("UI/icon.png")
+        if getattr(sys, 'frozen', False):
+            basedir = getattr(sys, '_MEIPASS', None) or ""
+        else:
+            basedir = os.path.dirname(__file__) or ""
+            
+        icon_path = os.path.join(basedir, "UI", "icon.png")
+        my_pixmap = QPixmap(icon_path)
         my_icon = QIcon(my_pixmap)
 
         self.setWindowIcon(my_icon)
@@ -132,45 +137,27 @@ class Widget(QDialog):
         )
         cmd = builder.build()
         print("Generated command:", cmd)
-        # CLI-Skript aus dem Fork aufrufen
-        
+
+        old_argv = sys.argv.copy()
         try:
-            # Prozess starten und Ausgaben abfangen
-            proc = subprocess.Popen(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True
+            sys.argv = cmd
+
+            # Direkt main() aufrufen
+            jlc_main()
+            QMessageBox.information(
+                self, "Erfolg",
+                f"Komponente {part} verarbeitet."
             )
-            # Warten & Ausgaben lesen
-            stdout, stderr = proc.communicate()
-            retcode = proc.returncode
-
-            # Ausgabe zusammenfassen (z.B. erst 5 Zeilen stdout)
-            out_lines = stdout.splitlines()
-            summary = "\n".join(out_lines[:5] + (["..."] if len(out_lines)>5 else []))
-
-            if retcode == 0:
-                QMessageBox.information(
-                    self, "Erfolg",
-                    f"Komponente {part} verarbeitet.\n\n"
-                    f"Ausgabe (erste 5 Zeilen):\n{summary}"
-                )
-            else:
-                err_lines = stderr.splitlines()
-                err_summary = "\n".join(err_lines[-5:])
-                QMessageBox.critical(
-                    self, "Fehler",
-                    f"Prozess abgebrochen mit Exit-Code {retcode}.\n\n"
-                    f"Letzte 5 Fehler-Zeilen:\n{err_summary}"
-                )
         except Exception as e:
             QMessageBox.critical(
                 self, "Fehler",
-                f"Start fehlgeschlagen:\n{e}"
+                f"Verarbeitung fehlgeschlagen:\n{e}"
             )
         finally:
+            # Alte argv wiederherstellen
+            sys.argv = old_argv
             self.accept()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
