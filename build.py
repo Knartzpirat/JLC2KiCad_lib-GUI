@@ -13,7 +13,7 @@ cmd = [
     "--noconsole",
     "--name", "JLC2KiCadGUI",
     "--icon", icon_file,
-    "--distpath", basedir,
+    "--distpath", os.path.join(basedir, "dist"),
     "--workpath", os.path.join(basedir, "build", "temp"),
     "--add-data", f"{ui_file};UI",
     "--add-data", f"{pixmap_file};UI",
