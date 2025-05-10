@@ -1,0 +1,13 @@
+# UTF-8
+filevers = (1, 1, 0, 0)
+prodvers = (1, 1, 0, 0)
+filetype = 1
+filesubtype = 0
+StringFileInfo: {
+    FileVersion: "1.1.1beta"
+    ProductVersion: "1.1"
+    ProductName: "JLC2KiCad-GUI"
+    FileDescription: "UI for JLC2KiCadLib"
+    OriginalFilename: "JLC2KiCadGUI.exe"
+    LegalCopyright: "© 2025 Knartzpirat"
+}

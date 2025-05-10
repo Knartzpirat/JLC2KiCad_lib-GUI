@@ -12,12 +12,13 @@ cmd = [
     "--onefile",
     "--noconsole",
     "--name", "JLC2KiCadGUI",
+    "--version", "version_info.txt",
     "--icon", icon_file,
     "--distpath", os.path.join(basedir, "dist"),
     "--workpath", os.path.join(basedir, "build", "temp"),
     "--add-data", f"{ui_file};UI",
     "--add-data", f"{pixmap_file};UI",
-    "--add-data", f"{pkg_folder};JLC2KiCadLib",
+    # "--add-data", f"{pkg_folder};JLC2KiCadLib",
     "--collect-all", "JLC2KiCadLib"
 ]
 
