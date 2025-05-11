@@ -83,7 +83,7 @@ class Widget(QDialog):
         # Widgets referenzieren
         self.part_input = self.findChild(QLineEdit, 'lineEdit_PartNumber')
         self.output_dir_input = self.findChild(QLineEdit, 'lineEdit_outputDir')
-        self.symbol_bib_input = self.findChild(QLineEdit, 'lineEdit_SymbolBib')
+        self.symbol_lib_input = self.findChild(QLineEdit, 'lineEdit_SymbolLib')
         self.dir_button = self.findChild(QPushButton, 'pushButton_DirChoice')
         self.logfile_checkbox = self.findChild(QCheckBox, 'checkBox_LogFile')
         self.loglevel_combo = self.findChild(QComboBox, 'comboBox_LogLevel')
@@ -107,26 +107,26 @@ class Widget(QDialog):
         directory = QFileDialog.getExistingDirectory(self, "Select output directory", os.getcwd())
         if directory and self.output_dir_input:
             self.output_dir_input.setText(directory)
-            # Speichere Auswahl
+            # Safe choice
             self.settings.setValue("output_dir", directory)
             self._load_symbol_bib(directory)
 
     def _load_symbol_bib(self, directory: str) -> None:
         symbol_folder = os.path.join(directory, 'symbol')
-        if os.path.isdir(symbol_folder) and self.symbol_bib_input:
+        if os.path.isdir(symbol_folder) and self.symbol_lib_input:
                 sym_files = [f for f in os.listdir(symbol_folder) if f.lower().endswith('.kicad_sym')]
                 if sym_files:
-                    self.symbol_bib_input.setText(os.path.splitext(sym_files[0])[0])
+                    self.symbol_lib_input.setText(os.path.splitext(sym_files[0])[0])
 
     def process(self):
         part = (self.part_input.text().strip() if self.part_input else '')
         out_dir = (self.output_dir_input.text().strip() if self.output_dir_input else '')
-        symbol = (self.symbol_bib_input.text().strip() if self.symbol_bib_input else '')
+        symbol = (self.symbol_lib_input.text().strip() if self.symbol_lib_input else '')
         use_log = (self.logfile_checkbox.isChecked() if self.logfile_checkbox else False)
         level = (self.loglevel_combo.currentText() if self.loglevel_combo else 'INFO')
         skip = (self.skip_existing_checkbox.isChecked() if self.skip_existing_checkbox else False)
 
-        # Erzeuge CLI-Argumente
+        # create CLI-Arguments
         builder = CommandBuilder(
             part_number=part,
             output_dir=out_dir,
@@ -142,7 +142,7 @@ class Widget(QDialog):
         try:
             sys.argv = cmd
 
-            # Direkt main() aufrufen
+            # call main()
             jlc_main()
             QMessageBox.information(
                 self, "Erfolg",
@@ -154,7 +154,7 @@ class Widget(QDialog):
                 f"Verarbeitung fehlgeschlagen:\n{e}"
             )
         finally:
-            # Alte argv wiederherstellen
+            # old argv recovery
             sys.argv = old_argv
             self.accept()
 
