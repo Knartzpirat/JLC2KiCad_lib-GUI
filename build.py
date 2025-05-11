@@ -22,7 +22,7 @@ cmd = [
     "--collect-all", "JLC2KiCadLib"
 ]
 
-# Starte den Build
+# start build
 result = subprocess.run(cmd, shell=(sys.platform == "win32"))
 if result.returncode != 0:
     print("Fehler beim Erstellen der EXE:", result.stderr)
