@@ -10,10 +10,10 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtUiTools import QUiLoader
 
-# Importiere main direkt
+# Importiere main direct from proect
 from JLC2KiCadLib.JLC2KiCadLib import main as jlc_main
 
-# Stelle Organisation und App-Name für QSettings ein
+# set application and organization name 
 QCoreApplication.setOrganizationName("Knartz Software Bude")
 QCoreApplication.setApplicationName("JLC2KiCadGUI")
 
@@ -35,7 +35,6 @@ class CommandBuilder:
         self.skip_existing = skip_existing
 
     def build(self) -> list[str]:
-       
         cmd = ["JLC2KiCadLib", self.part_number]
         cmd += ["-dir", self.output_dir]
         if self.use_log_file:
@@ -61,10 +60,10 @@ class Widget(QDialog):
         my_icon = QIcon(my_pixmap)
 
         self.setWindowIcon(my_icon)
-        # QSettings für persistenten Speicher
+        # QSettings for Persistent Storage
         self.settings = QSettings()
 
-        # UI laden
+        # load ui
         ui_path = os.path.join(os.path.dirname(__file__), ui_filename)
         ui_file = QFile(ui_path)
         if not ui_file.open(QIODevice.OpenModeFlag.ReadOnly):
@@ -80,7 +79,7 @@ class Widget(QDialog):
         if layout is not None:
             self.setLayout(layout)
 
-        # Widgets referenzieren
+        # Referencing Widgets
         self.part_input = self.findChild(QLineEdit, 'lineEdit_PartNumber')
         self.output_dir_input = self.findChild(QLineEdit, 'lineEdit_outputDir')
         self.symbol_lib_input = self.findChild(QLineEdit, 'lineEdit_SymbolLib')
@@ -90,13 +89,13 @@ class Widget(QDialog):
         self.skip_existing_checkbox = self.findChild(QCheckBox, 'checkBox_SkipExisting')
         self.button_box = self.findChild(QDialogButtonBox, 'buttonBox_Process')
 
-        # Lade gespeicherten Ausgabeordner, falls vorhanden
+        # Load Saved Output Folder if Available
         last_dir = str(self.settings.value("output_dir", type=str))
         if last_dir and os.path.isdir(last_dir) and self.output_dir_input:
             self.output_dir_input.setText(last_dir)
             self._load_symbol_bib(last_dir)
 
-        # Signale verbinden
+        # connect signals
         if self.dir_button:
             self.dir_button.clicked.connect(self.choose_output_dir)
         if self.button_box:
