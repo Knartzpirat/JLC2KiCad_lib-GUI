@@ -41,51 +41,11 @@
   <property name="modal">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_6">
    <property name="sizeConstraint">
     <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
    </property>
-   <item row="3" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox_Process">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="sizeIncrement">
-      <size>
-       <width>0</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="baseSize">
-      <size>
-       <width>0</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LayoutDirection::LeftToRight</enum>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Orientation::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
-     </property>
-     <property name="centerButtons">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
+   <item>
     <widget class="QFrame" name="frame_input">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -131,7 +91,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="lineEdit_PartNumber">
+          <widget class="QLineEdit" name="lineEdit_PartNumber_Input">
            <property name="minimumSize">
             <size>
              <width>200</width>
@@ -144,7 +104,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_DirChoice">
+          <widget class="QPushButton" name="pushButton_Browse_Output">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -208,7 +168,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="lineEdit_outputDir">
+          <widget class="QLineEdit" name="lineEdit_Browse_Output">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -226,7 +186,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item>
     <widget class="QFrame" name="frame_tab">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -342,7 +302,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QLineEdit" name="lineEdit_SymbolLib">
+              <widget class="QLineEdit" name="lineEdit_SymbolLIB_Input">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -379,7 +339,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_SymbolDIR">
+              <widget class="QLineEdit" name="lineEdit_SymbolDIR_Input">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -398,7 +358,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_FootprintDIR">
+              <widget class="QLineEdit" name="lineEdit_FootprintDIR_Input">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -411,14 +371,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_Model_DIR">
+              <widget class="QLineEdit" name="lineEdit_ModelDIR_Input">
                <property name="placeholderText">
                 <string>e.g. 3DMODEL_DIR or leave empty</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_MODEL_BASE_VARIABLE">
+              <widget class="QLineEdit" name="lineEdit_ModelVAR_Input">
                <property name="toolTip">
                 <string>write 3DMODEL_BASE_VARIABLE or $(3DMODEL_BASE_VARIABLE)</string>
                </property>
@@ -458,7 +418,7 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QRadioButton" name="radioButton_step">
+                 <widget class="QRadioButton" name="radioButton_Model_step">
                   <property name="text">
                    <string>STEP</string>
                   </property>
@@ -468,16 +428,16 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QRadioButton" name="radioButton_any">
+                 <widget class="QRadioButton" name="radioButton_Model_wrl">
                   <property name="text">
-                   <string>any Model</string>
+                   <string>WRL</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QRadioButton" name="radioButton_wrl">
+                 <widget class="QRadioButton" name="radioButton_Model_any">
                   <property name="text">
-                   <string>WRL</string>
+                   <string>No 3D Model</string>
                   </property>
                  </widget>
                 </item>
@@ -679,30 +639,135 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Advanced</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QFrame" name="frame">
+            <property name="frameShape">
+             <enum>QFrame::Shape::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="checkBox_Symbol">
+               <property name="text">
+                <string>Download Symbol</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_Footprint">
+               <property name="text">
+                <string>Download Footpirnt</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox_Process">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>0</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>0</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LayoutDirection::LeftToRight</enum>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Orientation::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>lineEdit_PartNumber</tabstop>
-  <tabstop>pushButton_DirChoice</tabstop>
-  <tabstop>lineEdit_outputDir</tabstop>
+  <tabstop>lineEdit_PartNumber_Input</tabstop>
+  <tabstop>pushButton_Browse_Output</tabstop>
+  <tabstop>lineEdit_Browse_Output</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>listWidget</tabstop>
-  <tabstop>lineEdit_SymbolLib</tabstop>
-  <tabstop>lineEdit_SymbolDIR</tabstop>
-  <tabstop>lineEdit_FootprintDIR</tabstop>
-  <tabstop>lineEdit_Model_DIR</tabstop>
-  <tabstop>lineEdit_MODEL_BASE_VARIABLE</tabstop>
-  <tabstop>radioButton_step</tabstop>
-  <tabstop>radioButton_any</tabstop>
-  <tabstop>radioButton_wrl</tabstop>
+  <tabstop>lineEdit_SymbolLIB_Input</tabstop>
+  <tabstop>lineEdit_SymbolDIR_Input</tabstop>
+  <tabstop>lineEdit_FootprintDIR_Input</tabstop>
+  <tabstop>lineEdit_ModelDIR_Input</tabstop>
+  <tabstop>lineEdit_ModelVAR_Input</tabstop>
+  <tabstop>radioButton_Model_step</tabstop>
+  <tabstop>radioButton_Model_wrl</tabstop>
   <tabstop>checkBox_LogFile</tabstop>
   <tabstop>comboBox_LogLevel</tabstop>
   <tabstop>checkBox_SkipExisting</tabstop>
+  <tabstop>checkBox_Symbol</tabstop>
+  <tabstop>checkBox_Footprint</tabstop>
  </tabstops>
  <resources/>
  <connections>
