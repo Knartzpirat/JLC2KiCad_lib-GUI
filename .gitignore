@@ -132,3 +132,4 @@ dmypy.json
 docker-compose.yml
 # App
 db/
+gui_main_old.py
