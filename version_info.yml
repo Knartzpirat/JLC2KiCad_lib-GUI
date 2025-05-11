@@ -1,0 +1,10 @@
+  Version: 2.0.0.0
+  CompanyName: Knartzpirat
+  FileDescription: GUI for JLC2KiCad
+  InternalName: JLC2KiCadGUI
+  LegalCopyright: © 2025 Knartzpirat
+  OriginalFilename: JLC2KiCadGUI.exe
+  ProductName: JLC2KiCadGUI
+  Translation:
+    - langID: 0
+      charsetID: 1200
