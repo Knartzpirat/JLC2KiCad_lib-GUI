@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtUiTools import QUiLoader
 
-# Importiere main direct from proect
+# Importiere main direct from project
 from JLC2KiCadLib.JLC2KiCadLib import main as jlc_main
 
 # set application and organization name 
@@ -39,7 +39,6 @@ class CommandBuilder:
         cmd += ["-dir", self.output_dir]
         if self.use_log_file:
             cmd += ["-symbol_lib", self.symbol_lib]
-        if self.use_log_file:
             cmd.append("--log_file")
             cmd += ["-logging_level", self.logging_level]
         if self.skip_existing:
@@ -48,54 +47,59 @@ class CommandBuilder:
 
 class Widget(QDialog):
     def __init__(self, ui_filename: str, parent: Optional[QWidget] = None):
-        super(Widget, self).__init__(parent)
+        super().__init__(parent)
         self.setWindowTitle("JLC2KiCad GUI")
+
+        # Ressourcen-Pfad (bei frozen mode)
         if getattr(sys, 'frozen', False):
-            basedir = getattr(sys, '_MEIPASS', None) or ""
+            basedir = getattr(sys, '_MEIPASS', "") or ""
         else:
             basedir = os.path.dirname(__file__) or ""
-            
-        icon_path = os.path.join(basedir, "UI", "icon.png")
-        my_pixmap = QPixmap(icon_path)
-        my_icon = QIcon(my_pixmap)
 
-        self.setWindowIcon(my_icon)
-        # QSettings for Persistent Storage
+        icon_path = os.path.join(basedir, "UI", "icon.png")
+        self.setWindowIcon(QIcon(QPixmap(icon_path)))
+
+        # QSettings für persistenten Speicher
         self.settings = QSettings()
 
-        # load ui
+        # UI laden
         ui_path = os.path.join(os.path.dirname(__file__), ui_filename)
         ui_file = QFile(ui_path)
         if not ui_file.open(QIODevice.OpenModeFlag.ReadOnly):
             raise IOError(f"Cannot open UI file {ui_path}: {ui_file.errorString()}")
         loader = QUiLoader()
-        try:
-            loaded_ui = loader.load(ui_file, self)
-        except Exception as e:
-            raise RuntimeError(f"Failed to load UI: {e}")
-        finally:
-            ui_file.close()
+        loaded_ui = loader.load(ui_file, self)
+        ui_file.close()
         layout = loaded_ui.layout()
         if layout is not None:
             self.setLayout(layout)
 
-        # Referencing Widgets
-        self.part_input = self.findChild(QLineEdit, 'lineEdit_PartNumber')
-        self.output_dir_input = self.findChild(QLineEdit, 'lineEdit_outputDir')
-        self.symbol_lib_input = self.findChild(QLineEdit, 'lineEdit_SymbolLib')
-        self.dir_button = self.findChild(QPushButton, 'pushButton_DirChoice')
-        self.logfile_checkbox = self.findChild(QCheckBox, 'checkBox_LogFile')
-        self.loglevel_combo = self.findChild(QComboBox, 'comboBox_LogLevel')
-        self.skip_existing_checkbox = self.findChild(QCheckBox, 'checkBox_SkipExisting')
-        self.button_box = self.findChild(QDialogButtonBox, 'buttonBox_Process')
+        # Widgets referenzieren
+        self.part_input             = self.findChild(QLineEdit,        'lineEdit_PartNumber')
+        self.output_dir_input       = self.findChild(QLineEdit,        'lineEdit_outputDir')
+        self.symbol_lib_input       = self.findChild(QLineEdit,        'lineEdit_SymbolLib')
+        self.dir_button             = self.findChild(QPushButton,      'pushButton_DirChoice')
+        self.logfile_checkbox       = self.findChild(QCheckBox,        'checkBox_LogFile')
+        self.loglevel_combo         = self.findChild(QComboBox,        'comboBox_LogLevel')
+        self.skip_existing_checkbox = self.findChild(QCheckBox,        'checkBox_SkipExisting')
+        self.button_box             = self.findChild(QDialogButtonBox, 'buttonBox_Process')
 
-        # Load Saved Output Folder if Available
-        last_dir = str(self.settings.value("output_dir", type=str))
-        if last_dir and os.path.isdir(last_dir) and self.output_dir_input:
-            self.output_dir_input.setText(last_dir)
-            self._load_symbol_bib(last_dir)
+        # Initiales Füllen des output-Dir-Felds
+        last_dir = self.settings.value("output_dir", type=str)
+        if isinstance(last_dir, str) and os.path.isdir(last_dir):
+            start_dir = last_dir
+        else:
+            # Fallback: Dokumente-Ordner
+            if sys.platform == 'win32':
+                start_dir = os.path.join(os.environ.get("USERPROFILE", ""), "Documents")
+            else:
+                start_dir = os.path.expanduser("~/Documents")
+        if self.output_dir_input:
+            self.output_dir_input.setText(start_dir)
+        # und die Symbol-Lib ggf. laden
+        self._load_symbol_bib(start_dir)
 
-        # connect signals
+        # Signale verbinden
         if self.dir_button:
             self.dir_button.clicked.connect(self.choose_output_dir)
         if self.button_box:
@@ -103,63 +107,60 @@ class Widget(QDialog):
             self.button_box.rejected.connect(self.reject)
 
     def choose_output_dir(self):
-        directory = QFileDialog.getExistingDirectory(self, "Select output directory", os.getcwd())
+        # Erneut prüfen, ob es einen gespeicherten Pfad gibt
+        last_dir = str(self.settings.value("output_dir", type=str))
+        if last_dir and os.path.isdir(last_dir):
+            start_dir = last_dir
+        else:
+            # Dokumente-Ordner als Default
+            if sys.platform == 'win32':
+                start_dir = os.path.join(os.environ.get("USERPROFILE", ""), "Documents")
+            else:
+                start_dir = os.path.expanduser("~/Documents")
+
+        directory = QFileDialog.getExistingDirectory(
+            self,
+            "Select output directory",
+            start_dir,
+            QFileDialog.Option.ShowDirsOnly
+        )
+
         if directory and self.output_dir_input:
             self.output_dir_input.setText(directory)
-            # Safe choice
             self.settings.setValue("output_dir", directory)
             self._load_symbol_bib(directory)
 
     def _load_symbol_bib(self, directory: str) -> None:
         symbol_folder = os.path.join(directory, 'symbol')
         if os.path.isdir(symbol_folder) and self.symbol_lib_input:
-                sym_files = [f for f in os.listdir(symbol_folder) if f.lower().endswith('.kicad_sym')]
-                if sym_files:
-                    self.symbol_lib_input.setText(os.path.splitext(sym_files[0])[0])
+            sym_files = [f for f in os.listdir(symbol_folder) if f.lower().endswith('.kicad_sym')]
+            if sym_files:
+                self.symbol_lib_input.setText(os.path.splitext(sym_files[0])[0])
 
     def process(self):
-        part = (self.part_input.text().strip() if self.part_input else '')
-        out_dir = (self.output_dir_input.text().strip() if self.output_dir_input else '')
-        symbol = (self.symbol_lib_input.text().strip() if self.symbol_lib_input else '')
-        use_log = (self.logfile_checkbox.isChecked() if self.logfile_checkbox else False)
-        level = (self.loglevel_combo.currentText() if self.loglevel_combo else 'INFO')
-        skip = (self.skip_existing_checkbox.isChecked() if self.skip_existing_checkbox else False)
+        part  = (self.part_input.text().strip() if self.part_input else '')
+        out   = (self.output_dir_input.text().strip() if self.output_dir_input else '')
+        sym   = (self.symbol_lib_input.text().strip() if self.symbol_lib_input else '')
+        use   = (self.logfile_checkbox.isChecked() if self.logfile_checkbox else False)
+        lvl   = (self.loglevel_combo.currentText() if self.loglevel_combo else 'INFO')
+        skip  = (self.skip_existing_checkbox.isChecked() if self.skip_existing_checkbox else False)
 
-        # create CLI-Arguments
-        builder = CommandBuilder(
-            part_number=part,
-            output_dir=out_dir,
-            symbol_lib=symbol,
-            use_log_file=use_log,
-            logging_level=level,
-            skip_existing=skip
-        )
-        cmd = builder.build()
+        cmd = CommandBuilder(part, out, sym, use, lvl, skip).build()
         print("Generated command:", cmd)
 
         old_argv = sys.argv.copy()
         try:
             sys.argv = cmd
-
-            # call main()
             jlc_main()
-            QMessageBox.information(
-                self, "Erfolg",
-                f"Komponente {part} verarbeitet."
-            )
+            QMessageBox.information(self, "Erfolg", f"Komponente {part} verarbeitet.")
         except Exception as e:
-            QMessageBox.critical(
-                self, "Fehler",
-                f"Verarbeitung fehlgeschlagen:\n{e}"
-            )
+            QMessageBox.critical(self, "Fehler", f"Verarbeitung fehlgeschlagen:\n{e}")
         finally:
-            # old argv recovery
             sys.argv = old_argv
             self.accept()
 
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    dialog = Widget(ui_filename="UI/JLC2KiCad-GUI.ui")
-    dialog.exec()
+    dlg = Widget(ui_filename="UI/JLC2KiCad-GUI.ui")
+    dlg.exec()
     sys.exit(0)
