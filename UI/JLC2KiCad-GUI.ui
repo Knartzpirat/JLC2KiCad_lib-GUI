@@ -173,7 +173,7 @@
             </size>
            </property>
            <property name="default">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="flat">
             <bool>false</bool>
@@ -683,6 +683,24 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_PartNumber</tabstop>
+  <tabstop>pushButton_DirChoice</tabstop>
+  <tabstop>lineEdit_outputDir</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>listWidget</tabstop>
+  <tabstop>lineEdit_SymbolLib</tabstop>
+  <tabstop>lineEdit_SymbolDIR</tabstop>
+  <tabstop>lineEdit_FootprintDIR</tabstop>
+  <tabstop>lineEdit_Model_DIR</tabstop>
+  <tabstop>lineEdit_MODEL_BASE_VARIABLE</tabstop>
+  <tabstop>radioButton_step</tabstop>
+  <tabstop>radioButton_any</tabstop>
+  <tabstop>radioButton_wrl</tabstop>
+  <tabstop>checkBox_LogFile</tabstop>
+  <tabstop>comboBox_LogLevel</tabstop>
+  <tabstop>checkBox_SkipExisting</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -692,8 +710,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>380</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -708,8 +726,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>380</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
