@@ -63,7 +63,7 @@ class CommandBuilder:
         else:
             cmd += ["-footprint_lib", self.footprint_dir]
             if self.model_type == "NO":
-                cmd.append("--models")
+                cmd.append("-models")
             else:
                 cmd += ["-models", self.model_type]
             cmd += ["-model_dir", self.model_dir]
@@ -128,7 +128,7 @@ class Widget(QDialog):
         self.download_symbol        = self.findChild(QCheckBox,         'checkBox_Symbol')
         self.download_footprint     = self.findChild(QCheckBox,         'checkBox_Footprint')
         self.model_step_rb          = self.findChild(QRadioButton,      'radioButton_Model_step')
-        self.model_any_rb           = self.findChild(QRadioButton,      'radioButton_Model_any')
+        self.model_no_rb           = self.findChild(QRadioButton,      'radioButton_Model_any')
         self.model_wrl_rb           = self.findChild(QRadioButton,      'radioButton_Model_wrl')
         self.tab_widget             = self.findChild(QTabWidget,        'tabWidget')
         self.list_widget            = self.findChild(QListWidget,       'listWidget')
@@ -166,8 +166,8 @@ class Widget(QDialog):
         stored_type = self.settings.value("model_type", "STEP", type=str)
         if stored_type == "STEP" and self.model_step_rb:
             self.model_step_rb.setChecked(True)
-        elif stored_type == "NO" and self.model_any_rb:
-            self.model_any_rb.setChecked(True)
+        elif stored_type == "NO" and self.model_no_rb:
+            self.model_no_rb.setChecked(True)
         elif stored_type == "WRL" and self.model_wrl_rb:
             self.model_wrl_rb.setChecked(True)
 
@@ -361,7 +361,7 @@ class Widget(QDialog):
     def _get_model_type(self) -> str:
         if self.model_step_rb and self.model_step_rb.isChecked():
             return 'STEP'
-        elif self.model_any_rb and self.model_any_rb.isChecked():
+        elif self.model_no_rb and self.model_no_rb.isChecked():
             return 'NO'
         elif self.model_wrl_rb and self.model_wrl_rb.isChecked():
             return 'WRL'
