@@ -6,11 +6,11 @@
 
 </p>
 
-JLC2KiCadLib-GUI is a UI for [[JLC2KiCadLib](https://github.com/TousstNicolas/JLC2KiCad_lib)] from [TousstNicolas](TousstNicolas), that generate a component library (symbol, footprint and 3D model) for KiCad from the JLCPCB/easyEDA library. 
+JLC2KiCadLib-GUI is a UI for [JLC2KiCadLib](https://github.com/TousstNicolas/JLC2KiCad_lib) from [TousstNicolas](TousstNicolas), that generate a component library (symbol, footprint and 3D model) for KiCad from the JLCPCB/easyEDA library. 
 This program is currently only developed for Windows (see [Releases](https://github.com/Knartzpirat/JLC2KiCad_lib-GUI/releases)). If you're interested, I can create an executable for Linux. Otherwise, you have the option to build it yourself using the source code.
 
 ## Example 
-
+![UI_1](https://raw.githubusercontent.com/Knartzpirat/JLC2KiCad_lib-GUI/master/images/UI_1.png)
 
 
 easyEDA origin | KiCad result
