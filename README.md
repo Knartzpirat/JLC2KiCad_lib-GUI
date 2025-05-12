@@ -10,7 +10,7 @@ JLC2KiCadLib-GUI is a UI for [JLC2KiCadLib](https://github.com/TousstNicolas/JLC
 This program is currently only developed for Windows (see [Releases](https://github.com/Knartzpirat/JLC2KiCad_lib-GUI/releases)). If you're interested, I can create an executable for Linux. Otherwise, you have the option to build it yourself using the source code.
 
 ## Example 
-![UI_1](https://raw.githubusercontent.com/Knartzpirat/JLC2KiCad_lib-GUI/master/images/UI_1.png)
+![UI_1](https://raw.githubusercontent.com/Knartzpirat/JLC2KiCad_lib-GUI/master/images/UI_1.PNG)
 
 
 easyEDA origin | KiCad result
