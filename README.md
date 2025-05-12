@@ -39,11 +39,9 @@ My_lib
     └── My_symbol_lib.kicad_sym
 ```
 
-Most of those arguments are optional. The only required argument is the JLCPCB part #.
+Most of those arguments are optional. The only required argument is the JLCPCB part # and the path of library folder.
 
 The JLCPCB part # is found in the part info section of every component in the JLCPCB part library. 
-
-By default, the library folder will be created in the execution directory. You can specify an absolute path with the -dir option. 
 
 ## Dependencies 
 
