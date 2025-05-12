@@ -21,7 +21,10 @@ easyEDA origin | KiCad result
 
 ## Installation
 
+### Windows
+Download latest JLC2KiCadGUI.exe from [Release](https://github.com/Knartzpirat/JLC2KiCad_lib-GUI/releases)
 
+### Linux / Mac
 
 ## Usage 
 ```
